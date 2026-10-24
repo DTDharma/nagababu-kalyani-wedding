@@ -1752,6 +1752,32 @@ button {
     color: rgba(245, 240, 232, 0.4) !important;
 }
 
+/* Footer RSVP WhatsApp Button */
+.footer-rsvp {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.footer-rsvp .whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background: #25D366;
+    color: #fff;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.footer-rsvp .whatsapp-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
 /* ============================================== */
 /* HIDE NETLIFY BADGES & WATERMARKS               */
 /* ============================================== */
