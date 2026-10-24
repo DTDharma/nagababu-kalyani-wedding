@@ -110,20 +110,22 @@
     }
 
     function playMusic() {
-        if (!audioElement) return;
+        isPlaying = true;
+        updateButtonUI(true);
 
-        audioElement.loop = true;
-        const playPromise = audioElement.play();
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                isPlaying = true;
-                updateButtonUI(true);
-            }).catch((err) => {
-                // Modern browsers (Chrome, Safari) require a user tap/click before playing unmuted audio.
-                // We keep button muted and wait for first tap anywhere on screen to begin.
-                isPlaying = false;
-                updateButtonUI(false);
-            });
+        if (audioElement) {
+            audioElement.loop = true;
+            const playPromise = audioElement.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    stopSynthMelody();
+                }).catch((err) => {
+                    console.log('Audio autoplay blocked or failed, using synth melody fallback:', err);
+                    startSynthMelody();
+                });
+            }
+        } else {
+            startSynthMelody();
         }
     }
 
@@ -167,37 +169,16 @@
         musicBtn.addEventListener('click', toggleMusic);
     }
 
-    // Try playing immediately as soon as page loads
-    function attemptImmediatePlay() {
+    // Auto-start on first user interaction anywhere on the screen
+    function tryAutoplayOnInteraction() {
         if (!isPlaying) {
             playMusic();
         }
+        document.removeEventListener('click', tryAutoplayOnInteraction);
+        document.removeEventListener('touchstart', tryAutoplayOnInteraction);
     }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', attemptImmediatePlay);
-    } else {
-        attemptImmediatePlay();
-    }
-    window.addEventListener('load', attemptImmediatePlay);
-
-    // If browser blocks immediate autoplay without user gesture,
-    // trigger playback on the very first touch, click, scroll, or keypress anywhere on screen
-    const userGestures = ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click', 'keydown', 'scroll', 'wheel'];
-    function unlockAudioOnGesture() {
-        if (!isPlaying) {
-            playMusic();
-        }
-        userGestures.forEach(evt => {
-            window.removeEventListener(evt, unlockAudioOnGesture, true);
-            document.removeEventListener(evt, unlockAudioOnGesture, true);
-        });
-    }
-
-    userGestures.forEach(evt => {
-        window.addEventListener(evt, unlockAudioOnGesture, { capture: true, passive: true });
-        document.addEventListener(evt, unlockAudioOnGesture, { capture: true, passive: true });
-    });
+    document.addEventListener('click', tryAutoplayOnInteraction, { once: true });
+    document.addEventListener('touchstart', tryAutoplayOnInteraction, { once: true });
 
     // Expose globally for gate open trigger
     window.WeddingMusic = {
