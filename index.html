@@ -729,15 +729,13 @@
             </div> <!-- end .royal-card-book -->
         </div> <!-- end #royal-sheet-modal -->
 
-        <!-- Audio Element (Continuous 32s Background Music Loop) -->
-        <audio id="bg-music" loop preload="auto">
-            <source src="Image/wedding-music.mp3" type="audio/mpeg">
-        </audio>
+        <!-- Audio Element (Direct src + playsinline for Mobile Chrome & Safari) -->
+        <audio id="bg-music" src="Image/wedding-music.mp3" preload="auto" loop playsinline webkit-playsinline></audio>
 
-        <!-- JavaScript -->
+        <!-- JavaScript: music.js loaded first so WeddingMusic controller is ready -->
+        <script src="js/music.js"></script>
         <script src="js/main.js"></script>
         <script src="js/petals.js"></script>
-        <script src="js/music.js"></script>
 </body>
 
 </html>
