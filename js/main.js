@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initGate();
     initScrollReveal();
     initShareButtons();
+    initRoyalInvitationSheet();
 });
 
 /**
@@ -154,3 +155,70 @@ function showToast(message) {
         toast.style.transform = 'translateX(-50%) translateY(120px)';
     }, 3200);
 }
+
+/**
+ * Royal Invitation Card Sheet Modal & Unfolding Interaction
+ */
+function initRoyalInvitationSheet() {
+    const modal = document.getElementById('royal-sheet-modal');
+    const book = document.getElementById('royal-card-book');
+    const backdrop = document.getElementById('royal-sheet-backdrop');
+    const closeBtn = document.getElementById('royal-sheet-close-btn');
+    const openPatrikaBtn = document.getElementById('open-patrika-btn');
+    const openFamilyBtn = document.getElementById('open-family-btn');
+
+    const tabBtnPatrika = document.getElementById('tab-btn-patrika');
+    const tabBtnFamily = document.getElementById('tab-btn-family');
+    const tabPatrika = document.getElementById('tab-patrika');
+    const tabFamily = document.getElementById('tab-family');
+
+    if (!modal || !book) return;
+
+    function switchTab(target) {
+        if (target === 'family') {
+            tabBtnPatrika?.classList.remove('active');
+            tabBtnFamily?.classList.add('active');
+            tabPatrika?.classList.remove('active');
+            tabFamily?.classList.add('active');
+        } else {
+            tabBtnFamily?.classList.remove('active');
+            tabBtnPatrika?.classList.add('active');
+            tabFamily?.classList.remove('active');
+            tabPatrika?.classList.add('active');
+        }
+    }
+
+    function openSheet(targetTab) {
+        switchTab(targetTab);
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+        book.classList.remove('closing');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSheet() {
+        book.classList.add('closing');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+            book.classList.remove('closing');
+            document.body.style.overflow = '';
+        }, 320);
+    }
+
+    openPatrikaBtn?.addEventListener('click', () => openSheet('patrika'));
+    openFamilyBtn?.addEventListener('click', () => openSheet('family'));
+
+    tabBtnPatrika?.addEventListener('click', () => switchTab('patrika'));
+    tabBtnFamily?.addEventListener('click', () => switchTab('family'));
+
+    closeBtn?.addEventListener('click', closeSheet);
+    backdrop?.addEventListener('click', closeSheet);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeSheet();
+        }
+    });
+}
+

@@ -314,3 +314,55 @@
         padding: 12px 18px;
     }
 }
+
+/* Royal Action Buttons & Sheet Mobile Adjustments */
+@media screen and (max-width: 600px) {
+    .royal-btn-group {
+        flex-direction: column;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .royal-gold-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 18px;
+    }
+
+    .royal-sheet-overlay {
+        padding: 10px;
+    }
+
+    .royal-card-book {
+        padding: 0;
+        border-radius: 14px;
+        max-height: 94vh;
+    }
+
+    .royal-card-inner {
+        padding: 44px 16px 36px;
+    }
+
+    .royal-tabs-nav {
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .royal-tab-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    .royal-sheet-close {
+        top: 10px;
+        right: 10px;
+        padding: 5px 12px;
+        font-size: 0.78rem;
+    }
+
+    .family-cards-inner {
+        grid-template-columns: 1fr;
+    }
+}
+
