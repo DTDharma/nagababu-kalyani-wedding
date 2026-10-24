@@ -110,22 +110,20 @@
     }
 
     function playMusic() {
-        isPlaying = true;
-        updateButtonUI(true);
+        if (!audioElement) return;
 
-        if (audioElement) {
-            audioElement.loop = true;
-            const playPromise = audioElement.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    stopSynthMelody();
-                }).catch((err) => {
-                    console.log('Audio autoplay blocked or failed, using synth melody fallback:', err);
-                    startSynthMelody();
-                });
-            }
-        } else {
-            startSynthMelody();
+        audioElement.loop = true;
+        const playPromise = audioElement.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isPlaying = true;
+                updateButtonUI(true);
+            }).catch((err) => {
+                // Modern browsers (Chrome, Safari) require a user tap/click before playing unmuted audio.
+                // We keep button muted and wait for first tap anywhere on screen to begin.
+                isPlaying = false;
+                updateButtonUI(false);
+            });
         }
     }
 
