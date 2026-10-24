@@ -21,6 +21,8 @@ function initGate() {
 
     // Check if user already opened gate in this session (optional, but keep it exciting)
     openBtn.addEventListener('click', () => {
+        if (openBtn.disabled) return;
+        openBtn.disabled = true;
         // Trigger Music automatically on user interaction
         if (window.WeddingMusic && typeof window.WeddingMusic.startMusic === 'function') {
             window.WeddingMusic.startMusic();
@@ -188,21 +190,28 @@ function initRoyalInvitationSheet() {
         }
     }
 
+    let previousFocus = null;
+
     function openSheet(targetTab) {
+        if (!modal.classList.contains('hidden')) return;
+        previousFocus = document.activeElement;
         switchTab(targetTab);
         modal.classList.remove('hidden');
         modal.setAttribute('aria-hidden', 'false');
         book.classList.remove('closing');
         document.body.style.overflow = 'hidden';
+        closeBtn?.focus();
     }
 
     function closeSheet() {
+        if (modal.classList.contains('hidden') || book.classList.contains('closing')) return;
         book.classList.add('closing');
         setTimeout(() => {
             modal.classList.add('hidden');
             modal.setAttribute('aria-hidden', 'true');
             book.classList.remove('closing');
             document.body.style.overflow = '';
+            previousFocus?.focus();
         }, 320);
     }
 

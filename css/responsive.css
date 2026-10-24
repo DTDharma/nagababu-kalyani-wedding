@@ -26,12 +26,16 @@
 
     /* Gate Screen Mobile Optimization */
     .gate-content {
-        padding: 60px 12px 20px;
+        width: 100%;
+        padding: max(60px, env(safe-area-inset-top)) 12px max(20px, env(safe-area-inset-bottom));
         max-height: 100vh;
+        max-height: 100dvh;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        overflow-y: auto;
+        overscroll-behavior: contain;
     }
 
     .tirunamam-icon {
@@ -239,7 +243,7 @@
     }
 
     .gate-content {
-        padding: 65px 15px 30px;
+        padding: max(65px, env(safe-area-inset-top)) 15px max(30px, env(safe-area-inset-bottom));
     }
 
     /* Venue */
@@ -253,6 +257,15 @@
 
     .venue-map iframe {
         height: 300px;
+    }
+
+    .parallax-banner {
+        height: 220px;
+        background-attachment: scroll;
+    }
+
+    .parallax-quote {
+        font-size: 1.35rem;
     }
 
     /* RSVP Form */
@@ -269,8 +282,9 @@
     .music-btn {
         width: 44px;
         height: 44px;
-        top: 15px;
+        top: auto;
         right: 15px;
+        bottom: max(15px, env(safe-area-inset-bottom));
         font-size: 1.1rem;
     }
 
@@ -291,7 +305,12 @@
 /* Very Small Mobile Screens (max-width: 380px) */
 @media screen and (max-width: 380px) {
     .gate-title-telugu {
-        font-size: 1.8rem;
+        font-size: 1.45rem;
+        line-height: 1.25;
+    }
+
+    .gate-title-sub {
+        font-size: 1.45rem;
     }
 
     .photo-frame {
@@ -310,6 +329,7 @@
     .venue-btn-primary,
     .whatsapp-btn,
     .open-btn {
+        min-height: 48px;
         font-size: 0.95rem;
         padding: 12px 18px;
     }
@@ -332,12 +352,15 @@
 
     .royal-sheet-overlay {
         padding: 10px;
+        padding-top: max(10px, env(safe-area-inset-top));
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
     }
 
     .royal-card-book {
         padding: 0;
         border-radius: 14px;
         max-height: 94vh;
+        max-height: 94dvh;
     }
 
     .royal-card-inner {
@@ -363,6 +386,43 @@
 
     .family-cards-inner {
         grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .section-container {
+        min-width: 0;
+    }
+
+    .section-title {
+        max-width: 100%;
+        padding-inline: 4px;
+    }
+
+    .royal-tabs-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .royal-tab-btn {
+        min-width: 0;
+        justify-content: center;
+        padding-inline: 6px;
+    }
+
+    .royal-tab-btn .tab-title {
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
 

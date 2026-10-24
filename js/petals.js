@@ -5,6 +5,7 @@
 (function () {
     const container = document.getElementById('petals-container');
     if (!container) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     // SVG petal shapes
     const petalSVGs = [
