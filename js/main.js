@@ -19,9 +19,13 @@ function initGate() {
 
     if (!gate || !openBtn || !mainContent) return;
 
-    // Check if user already opened gate in this session (optional, but keep it exciting)
-    openBtn.addEventListener('click', () => {
-        // Trigger Music automatically on user interaction
+    let hasOpened = false;
+
+    function openGate() {
+        if (hasOpened) return;
+        hasOpened = true;
+
+        // Trigger Music automatically
         if (window.WeddingMusic && typeof window.WeddingMusic.startMusic === 'function') {
             window.WeddingMusic.startMusic();
         }
@@ -46,7 +50,10 @@ function initGate() {
                 coupleSection.scrollIntoView({ behavior: 'smooth' });
             }
         }, 1200);
-    });
+    }
+
+    openBtn.addEventListener('click', openGate);
+    gate.addEventListener('click', openGate);
 }
 
 /**

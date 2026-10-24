@@ -113,11 +113,14 @@
         isPlaying = true;
         updateButtonUI(true);
 
-        if (audioElement && audioElement.currentSrc) {
+        if (audioElement) {
+            audioElement.loop = true;
             const playPromise = audioElement.play();
             if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    // Audio file failed or missing, use synthetic melody
+                playPromise.then(() => {
+                    stopSynthMelody();
+                }).catch((err) => {
+                    console.log('Audio autoplay blocked or failed, using synth melody fallback:', err);
                     startSynthMelody();
                 });
             }
@@ -143,9 +146,60 @@
         }
     }
 
+    if (audioElement) {
+        audioElement.loop = true;
+        // Backup loop handler to ensure continuous playback across all mobile browsers
+        audioElement.addEventListener('ended', function () {
+            this.currentTime = 0;
+            this.play().catch(() => {});
+        });
+        audioElement.addEventListener('play', () => {
+            isPlaying = true;
+            updateButtonUI(true);
+        });
+        audioElement.addEventListener('pause', () => {
+            if (!synthInterval) {
+                isPlaying = false;
+                updateButtonUI(false);
+            }
+        });
+    }
+
     if (musicBtn) {
         musicBtn.addEventListener('click', toggleMusic);
     }
+
+    // Try playing immediately as soon as page loads
+    function attemptImmediatePlay() {
+        if (!isPlaying) {
+            playMusic();
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attemptImmediatePlay);
+    } else {
+        attemptImmediatePlay();
+    }
+    window.addEventListener('load', attemptImmediatePlay);
+
+    // If browser blocks immediate autoplay without user gesture,
+    // trigger playback on the very first touch, click, scroll, or keypress anywhere on screen
+    const userGestures = ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click', 'keydown', 'scroll', 'wheel'];
+    function unlockAudioOnGesture() {
+        if (!isPlaying) {
+            playMusic();
+        }
+        userGestures.forEach(evt => {
+            window.removeEventListener(evt, unlockAudioOnGesture, true);
+            document.removeEventListener(evt, unlockAudioOnGesture, true);
+        });
+    }
+
+    userGestures.forEach(evt => {
+        window.addEventListener(evt, unlockAudioOnGesture, { capture: true, passive: true });
+        document.addEventListener(evt, unlockAudioOnGesture, { capture: true, passive: true });
+    });
 
     // Expose globally for gate open trigger
     window.WeddingMusic = {
